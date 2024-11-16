@@ -1,0 +1,22 @@
+#include "/Engine/Public/Platform.ush"
+#include "/Engine/Private/Common.ush"
+#include "/Engine/Private/ScreenPass.ush"
+#include "/Engine/Private/PostProcessCommon.ush"
+
+
+int Intensity;
+float Radius;
+Texture2D SceneTexture;
+SamplerState Vignette_Sampler;
+
+// PS main
+void MainPS(in noperspective float4 UVAndScreenPos : TEXCOORD0, float4 SvPosition : SV_POSITION, out float4 OutColor : SV_Target0)
+{
+	float2 uv = UVAndScreenPos.xy;
+	uv *= 1.0f - uv; // map to -1 to 1
+	
+	float vig = (uv.x + uv.y) * Intensity;
+	vig = pow(vig, Radius);
+
+	OutColor = Texture2DSample(SceneTexture, Vignette_Sampler, UVAndScreenPos.xy) * vig;
+}
