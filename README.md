@@ -1,24 +1,20 @@
 # Vignette Post-Processing Effect and Editor Window (UE5)
 
-This repository provides a **Vignette Post-Processing Effect** implemented using Unreal Engine 5's Rendering Dependency Graph (RDG) and an editor tool for configuring vignette parameters. The tool integrates into Unreal Engine's menu system, under the **"Window"** menu, and features an intuitive editor for real-time adjustments to vignette properties.
+This repository provides a **Vignette Post-Processing Effect** plugin for Unreal Engine 5 using the Rendering Dependency Graph (RDG) and RHI interaface and an editor tool for configuring vignette parameters. The plugin also integrates a window into Unreal Engine's menu system, under the **"Window"** menu for adjustment of vignette properties.
 
----
+Vignette source: [ShaderToy Vignette Effect](https://www.shadertoy.com/view/lsKSWR)
 
 ## Features
 - **Custom Vignette Effect** using Unreal's RDG.
-- **Editor Tool** for adjusting vignette properties:
+- **Editor Window** for adjusting vignette properties:
   - **Vignette Radius** (float)
   - **Vignette Intensity** (int)
-- Easy integration into the Unreal Engine editor.
-
----
 
 ## Installation
 1. Clone this repository into your Unreal Engine project's `Plugins` folder.
 2. Open your project and enable the plugin in the **Plugins** window.
 3. Restart the editor to load the plugin.
 
----
 
 ## How to Register the Editor Window
 The vignette editor window is added to the **Window** menu in the Unreal Editor. The following code registers the window:
@@ -38,11 +34,10 @@ Section.AddMenuEntry(
 
 This code registers a menu entry titled "Open Vignette Editor" under Window > SandboxTools. Selecting it launches the editor.
 
-Building the Vignette Editor Window
-The editor window is constructed using Unreal's Slate UI framework. Below is the code used for the UI:
+## Building the Vignette Editor Window
+The editor window is constructed using Unreal's Slate UI framework. Create a new class that derives from `SCompoundWidget`:
 
 ```cpp
-Copy code
 void SVignetteParamsEditorWindow::Construct(const FArguments& InArgs)
 {
     VignetteSubsystem = GEngine->GetEngineSubsystem<UVignetteSubSystem>();
@@ -97,17 +92,11 @@ void SVignetteParamsEditorWindow::Construct(const FArguments& InArgs)
 }
 ```
 
-## UI Features
-- Vignette Radius:
-- Displays the current radius value.
-- Allows direct input for new values.
-- Vignette Intensity:
-- Displays the current intensity value.
-- Allows direct input for new values.
+VignetteSubsystem is a UEngineSubsystem that updates the Pixel ShaderParams. We store a reference for that in the editor plugin.
+
+**CVar:** Both the vignette and editor plugin are bult together, use `r.Vignette.Enable 0/1` to enable/disable the render pass.
 
 ## How to Use
-Access the Editor Window:
-
 Navigate to Window > SandboxTools > Open Vignette Editor in the Unreal Engine menu bar.
 
 Adjust Parameters:
@@ -115,6 +104,8 @@ Adjust Parameters:
 - Changes are applied in real-time through the associated subsystem (UVignetteSubsystem).
 
 ## Screenshots
+![UE5VignetteEditor](https://github.com/user-attachments/assets/04aaa3e3-1c29-48bd-b14b-fc8d3f6af882)
+
 
 ## Contributing
 Feel free to submit pull requests or open issues to enhance this plugin.
